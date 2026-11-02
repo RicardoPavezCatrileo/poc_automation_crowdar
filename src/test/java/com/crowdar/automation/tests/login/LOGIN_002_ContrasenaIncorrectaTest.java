@@ -1,7 +1,6 @@
-package com.crowdar.automation.tests;
+package com.crowdar.automation.tests.login;
 
 import com.crowdar.automation.base.BaseTest;
-import com.crowdar.automation.pages.InventoryPage;
 import com.crowdar.automation.pages.LoginPage;
 import com.crowdar.automation.utils.ConfigReader;
 import org.testng.annotations.Test;
@@ -10,24 +9,15 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
-public class LoginTest extends BaseTest {
+/** LOGIN-002 — Inicio de sesión con contraseña incorrecta (ver docs/casos_de_prueba.md). */
+public class LOGIN_002_ContrasenaIncorrectaTest extends BaseTest {
 
     private static final String WRONG_CREDENTIALS_ERROR =
             "Epic sadface: Username and password do not match any user in this service";
 
-    @Test(description = "LOGIN-001 - Inicio de sesión exitoso con usuario estándar",
-            groups = {"ui", "login", "smoke"})
-    public void login001_successfulLogin() {
-        InventoryPage inventory = loginPage().loginAs(
-                ConfigReader.get("standard.user"), ConfigReader.get("valid.password"));
-
-        assertTrue(inventory.isLoaded(), "Debería mostrarse el inventario tras un login válido");
-        assertEquals(inventory.getTitle(), "Products", "Título de la página de inventario");
-    }
-
     @Test(description = "LOGIN-002 - Inicio de sesión con contraseña incorrecta",
             groups = {"ui", "login"})
-    public void login002_wrongPasswordShowsError() {
+    public void LOGIN_002_contrasenaIncorrectaMuestraError() {
         LoginPage login = loginPage().attemptInvalidLogin(
                 ConfigReader.get("standard.user"), ConfigReader.get("invalid.password"));
 

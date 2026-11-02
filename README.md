@@ -60,14 +60,14 @@ Los reportes muestran el nombre de cada prueba, su resultado (PASS/FAIL/SKIP), e
 
 ## Cobertura automatizada
 
-| ID | Prueba | Clase / método | Resultado esperado |
+| ID | Prueba | Clase (un archivo .java por caso) | Resultado esperado |
 |---|---|---|---|
-| LOGIN-001 | Inicio de sesión exitoso | `LoginTest.login001_successfulLogin` | PASS |
-| LOGIN-002 | Contraseña incorrecta | `LoginTest.login002_wrongPasswordShowsError` | PASS |
-| CART-001 | Agregar un producto | `CartTest.cart001_addOneProduct` | PASS |
-| CART-002 | Agregar dos productos | `CartTest.cart002_addTwoProducts` | PASS |
-| CART-003 | Fallo intencional | `CartTest.cart003_intentionalFailure_wrongCartCount` | **FAIL** (deliberado) |
-| API-001 | Departamentos de Mercado Libre | `MercadoLibreApiTest.api001_departmentsAreReturned` | PASS, o SKIP si la CDN bloquea |
+| LOGIN-001 | Inicio de sesión exitoso | `LOGIN_001_InicioSesionExitosoTest` | PASS |
+| LOGIN-002 | Contraseña incorrecta | `LOGIN_002_ContrasenaIncorrectaTest` | PASS |
+| CART-001 | Agregar un producto | `CART_001_AgregarUnProductoTest` | PASS |
+| CART-002 | Agregar dos productos | `CART_002_AgregarDosProductosTest` | PASS |
+| CART-003 | Fallo intencional | `CART_003_FalloIntencionalTest` | **FAIL** (deliberado) |
+| API-001 | Departamentos de Mercado Libre | `API_001_DepartamentosMercadoLibreTest` | PASS, o SKIP si la CDN bloquea |
 
 La matriz completa de casos manuales (login, carrito y API) está en [`docs/casos_de_prueba.md`](docs/casos_de_prueba.md).
 
@@ -98,7 +98,7 @@ src/test/java/com/crowdar/automation/
 ├── base/BaseTest.java              # Ciclo de vida del navegador por prueba
 ├── factory/DriverFactory.java      # Chrome/Firefox con Selenium Manager (ThreadLocal)
 ├── pages/                          # Page Objects: BasePage, LoginPage, InventoryPage, CartPage
-├── tests/                          # LoginTest, CartTest, MercadoLibreApiTest
+├── tests/                          # Un caso por clase, nombrada con su ID: login/, cart/, api/
 ├── listeners/ScreenshotListener.java
 └── utils/ConfigReader.java         # config.properties + overrides -D
 ```

@@ -4,16 +4,25 @@
         <listener class-name="com.crowdar.automation.listeners.ScreenshotListener"/>
     </listeners>
 
-    <test name="UI - SauceDemo">
+    <!-- Un caso de prueba por clase; el nombre de la clase empieza con el ID de docs/casos_de_prueba.md -->
+    <test name="UI - Inicio de sesión">
         <classes>
-            <class name="com.crowdar.automation.tests.LoginTest"/>
-            <class name="com.crowdar.automation.tests.CartTest"/>
+            <class name="com.crowdar.automation.tests.login.LOGIN_001_InicioSesionExitosoTest"/>
+            <class name="com.crowdar.automation.tests.login.LOGIN_002_ContrasenaIncorrectaTest"/>
+        </classes>
+    </test>
+
+    <test name="UI - Carrito de compras">
+        <classes>
+            <class name="com.crowdar.automation.tests.cart.CART_001_AgregarUnProductoTest"/>
+            <class name="com.crowdar.automation.tests.cart.CART_002_AgregarDosProductosTest"/>
+            <class name="com.crowdar.automation.tests.cart.CART_003_FalloIntencionalTest"/>
         </classes>
     </test>
 
     <test name="API - Mercado Libre">
         <classes>
-            <class name="com.crowdar.automation.tests.MercadoLibreApiTest"/>
+            <class name="com.crowdar.automation.tests.api.API_001_DepartamentosMercadoLibreTest"/>
         </classes>
     </test>
 </suite>

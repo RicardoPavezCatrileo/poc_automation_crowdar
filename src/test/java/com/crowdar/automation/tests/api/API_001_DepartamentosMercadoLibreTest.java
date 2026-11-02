@@ -1,4 +1,4 @@
-package com.crowdar.automation.tests;
+package com.crowdar.automation.tests.api;
 
 import com.crowdar.automation.utils.ConfigReader;
 import io.restassured.RestAssured;
@@ -30,11 +30,11 @@ import static org.testng.Assert.fail;
  * (no se oculta como PASS ni se intenta evadir el bloqueo). Si el servicio responde 200,
  * se validan los departamentos.
  */
-public class MercadoLibreApiTest {
+public class API_001_DepartamentosMercadoLibreTest {
 
     @Test(description = "API-001 - Validar departamentos de Mercado Libre (GET /menu/departments)",
             groups = {"api"})
-    public void api001_departmentsAreReturned() {
+    public void API_001_validarDepartamentosMercadoLibre() {
         String url = ConfigReader.get("api.departments.url");
 
         Response response = RestAssured.given()
