@@ -5,7 +5,6 @@ import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.testng.Reporter;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
