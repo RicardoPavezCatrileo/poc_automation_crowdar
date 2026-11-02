@@ -1,0 +1,40 @@
+# Maven / build
+target/
+*.class
+*.jar
+*.war
+dependency-reduced-pom.xml
+
+# Reportes y evidencias generadas
+test-output/
+screenshots/
+*.log
+logs/
+
+# IDEs
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.factorypath
+
+# Sistema operativo
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Temporales
+*.tmp
+*.bak
+*.swp
+*~
+
+# Configuración local y secretos
+.env
+.env.*
+*.local.properties
+*.pem
+*.key

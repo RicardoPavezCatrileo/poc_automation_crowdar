@@ -1,0 +1,19 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Crowdar QA Automation Challenge" verbose="1">
+    <listeners>
+        <listener class-name="com.crowdar.automation.listeners.ScreenshotListener"/>
+    </listeners>
+
+    <test name="UI - SauceDemo">
+        <classes>
+            <class name="com.crowdar.automation.tests.LoginTest"/>
+            <class name="com.crowdar.automation.tests.CartTest"/>
+        </classes>
+    </test>
+
+    <test name="API - Mercado Libre">
+        <classes>
+            <class name="com.crowdar.automation.tests.MercadoLibreApiTest"/>
+        </classes>
+    </test>
+</suite>
