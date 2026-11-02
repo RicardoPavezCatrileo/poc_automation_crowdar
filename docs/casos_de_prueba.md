@@ -70,7 +70,7 @@ El endpoint responde distinto según el tipo de cliente:
 | Cliente | Respuesta |
 |---|---|
 | Navegador web | **HTTP 200, JSON**: `departments` (p. ej. "Tecnología", con categorías como `MLA1051` "Celulares y Teléfonos", `MLA1648` "Computación"), además de `landings`, `more_categories` y `high_priority` |
-| Cliente HTTP automatizado (REST Assured, curl), con o sin `Accept: application/json` | **HTTP 403, `text/html`**, `server: CloudFront`, `x-cache: Error from cloudfront`, página *"Hubo un error accediendo a esta pagina..."* |
+| Cliente HTTP (REST Assured, curl, Postman), con o sin `Accept: application/json` | **HTTP 403, `text/html`**, `server: CloudFront`, `x-cache: Error from cloudfront`, página *"Hubo un error accediendo a esta pagina..."* |
 
 La CDN de Mercado Libre (CloudFront) rechaza los clientes que no son navegadores antes de que la solicitud llegue al servicio.
 
