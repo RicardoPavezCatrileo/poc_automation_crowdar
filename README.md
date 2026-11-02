@@ -85,8 +85,8 @@ El listener `ScreenshotListener` captura la pantalla antes de cerrar el navegado
 
 Envía un `GET` a `https://www.mercadolibre.com.ar/menu/departments` sin usar WebDriver.
 
-- **Respuesta 200 con JSON:** valida que el cuerpo no esté vacío y que exista una lista `departments` no vacía cuyos elementos tengan `name`.
-- **Bloqueo de la CDN:** durante el desarrollo (02/11/2026), el endpoint respondió **HTTP 403 `text/html` desde CloudFront** (`x-cache: Error from cloudfront`) con la página *"Hubo un error accediendo a esta pagina..."*. En ese caso la prueba queda **SKIPPED** y deja la evidencia en el reporte. No se marca como PASS ni se intenta evadir el bloqueo.
+- **Respuesta 200 con JSON:** valida que exista una lista `departments` no vacía, que cada departamento tenga `name` y una lista `categories` no vacía, y que cada categoría tenga `id` y `name`. Es la estructura que devuelve el endpoint al consultarlo desde un navegador.
+- **Bloqueo de la CDN:** desde un navegador el endpoint devuelve 200 con JSON, pero a los clientes HTTP automatizados (REST Assured, curl) CloudFront les responde **HTTP 403 `text/html`** (`x-cache: Error from cloudfront`). En ese caso la prueba queda **SKIPPED** y deja la evidencia en el reporte. No se marca como PASS ni se evade el bloqueo haciéndose pasar por un navegador.
 - **Cualquier otra respuesta:** la prueba falla.
 
 Detalle y limitaciones en [`docs/casos_de_prueba.md`](docs/casos_de_prueba.md#3-api--mercado-libre).

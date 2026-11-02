@@ -61,24 +61,21 @@ La cobertura se diseñó con **partición de equivalencia** (credenciales válid
 
 | ID | Título | Objetivo | Precondiciones | Datos | Pasos | Resultado esperado | Tipo | Automatización |
 |---|---|---|---|---|---|---|---|---|
-| **API-001** | Validar departamentos de Mercado Libre | Verificar que el servicio responde y devuelve departamentos | Acceso a internet; el endpoint no debe estar bloqueado por la CDN | `GET https://www.mercadolibre.com.ar/menu/departments` | 1. Enviar el GET sin cabeceras especiales<br>2. Revisar estado, Content-Type y cuerpo | HTTP **200**; cuerpo no vacío; JSON con una lista `departments` no vacía cuyos elementos tienen `name` | API / contrato | **Automatizado** (`API_001_DepartamentosMercadoLibreTest`) |
+| **API-001** | Validar departamentos de Mercado Libre | Verificar que el servicio responde y devuelve departamentos | Acceso a internet; el endpoint no debe estar bloqueado por la CDN | `GET https://www.mercadolibre.com.ar/menu/departments` | 1. Enviar el GET sin cabeceras especiales<br>2. Revisar estado, Content-Type y cuerpo | HTTP **200**; cuerpo JSON no vacío; lista `departments` no vacía; cada departamento con `name` y una lista `categories` no vacía cuyos elementos tienen `id` y `name` | API / contrato | **Automatizado** (`API_001_DepartamentosMercadoLibreTest`) |
 
 ### Evidencia real del endpoint (02/11/2026)
 
-Inspección previa con `curl` desde Chile, sin cabeceras especiales:
+El endpoint responde distinto según el tipo de cliente:
 
-```
-HTTP/2 403
-server: CloudFront
-content-type: text/html
-x-cache: Error from cloudfront
-```
+| Cliente | Respuesta |
+|---|---|
+| Navegador web | **HTTP 200, JSON**: `departments` (p. ej. "Tecnología", con categorías como `MLA1051` "Celulares y Teléfonos", `MLA1648` "Computación"), además de `landings`, `more_categories` y `high_priority` |
+| Cliente HTTP automatizado (REST Assured, curl), con o sin `Accept: application/json` | **HTTP 403, `text/html`**, `server: CloudFront`, `x-cache: Error from cloudfront`, página *"Hubo un error accediendo a esta pagina..."* |
 
-El cuerpo es una página HTML de error con el texto *"Hubo un error accediendo a esta pagina..."*. Es un **bloqueo de la CDN previo al servicio**, no una respuesta de la aplicación.
+La CDN de Mercado Libre (CloudFront) rechaza los clientes que no son navegadores antes de que la solicitud llegue al servicio.
 
 **Tratamiento en la automatización:**
 
-- Si se detecta ese bloqueo (403 servido por CloudFront), la prueba queda **SKIPPED** y registra en el reporte el estado, las cabeceras y el mensaje de la página, que extrae con Jsoup. No se marca como PASS ni se intenta evadir el bloqueo, por ejemplo falsificando el User-Agent.
-- Si el servicio responde 200 con JSON, se ejecutan las aserciones de contenido.
+- Si el servicio responde 200, la prueba valida la estructura observada en la respuesta real del navegador. No exige `name` en `children_categories`, porque la respuesta real incluye hijos sin ese campo.
+- Si se detecta el bloqueo de CloudFront, la prueba queda **SKIPPED** y registra en el reporte el estado, las cabeceras y el mensaje de la página, que extrae con Jsoup. No se marca como PASS ni se evade el bloqueo haciéndose pasar por un navegador (User-Agent falso).
 - Cualquier otra respuesta hace **fallar** la prueba.
-- **Limitación:** la estructura `departments[].name` no pudo verificarse contra una respuesta 200 real desde este entorno. Debe confirmarse desde una red sin bloqueo.

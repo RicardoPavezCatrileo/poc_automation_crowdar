@@ -21,14 +21,16 @@ import static org.testng.Assert.fail;
 /**
  * API-001. No usa WebDriver.
  *
- * Inspección real del endpoint (02/11/2026, desde Chile, sin cabeceras especiales):
- * HTTP 403, Content-Type text/html, Server CloudFront, x-cache "Error from cloudfront",
- * cuerpo HTML con el texto "Hubo un error accediendo a esta pagina...".
- * Es un bloqueo de la CDN previo a la aplicación, no una respuesta del servicio.
+ * Respuestas reales observadas el 02/11/2026:
+ * - Desde un navegador: HTTP 200 con JSON {"departments":[{"name","categories":[{"id","name",
+ *   "permalink","children_categories"}]}], "landings", "more_categories", "high_priority"}.
+ * - Desde clientes HTTP automatizados (REST Assured, curl), con o sin "Accept: application/json":
+ *   HTTP 403 text/html de CloudFront (x-cache "Error from cloudfront") con la página
+ *   "Hubo un error accediendo a esta pagina...". La CDN filtra clientes no-navegador.
  *
- * Por eso: si se detecta ese bloqueo la prueba queda SKIPPED con la evidencia en el reporte
- * (no se oculta como PASS ni se intenta evadir el bloqueo). Si el servicio responde 200,
- * se validan los departamentos.
+ * Si se detecta ese bloqueo, la prueba queda SKIPPED con la evidencia en el reporte
+ * (no se marca como PASS ni se intenta evadir el bloqueo falsificando un navegador).
+ * Si el servicio responde 200, se validan los departamentos y sus categorías.
  */
 public class API_001_DepartamentosMercadoLibreTest {
 
@@ -68,17 +70,29 @@ public class API_001_DepartamentosMercadoLibreTest {
     }
 
     /**
-     * Estructura esperada: objeto con lista "departments" cuyos elementos tienen "name".
-     * Nota: no pudo verificarse contra una respuesta 200 real por el bloqueo documentado arriba.
+     * Valida la estructura observada en la respuesta real: lista "departments" no vacía,
+     * cada departamento con "name" y una lista "categories" no vacía cuyos elementos tienen "id" y "name".
+     * No se exige "name" en "children_categories" porque la respuesta real incluye hijos sin ese campo.
      */
+    @SuppressWarnings("unchecked")
     private void assertJsonDepartments(JsonPath json) {
         List<Map<String, Object>> departments = json.getList("departments");
         assertTrue(departments != null && !departments.isEmpty(), "Debería existir una lista 'departments' no vacía");
+
         for (Map<String, Object> department : departments) {
-            Object name = department.get("name");
-            assertTrue(name != null && !name.toString().isBlank(), "Cada departamento debería tener nombre: " + department);
+            String departmentName = String.valueOf(department.get("name"));
+            assertTrue(department.get("name") != null && !departmentName.isBlank(),
+                    "Cada departamento debería tener nombre: " + department);
+
+            List<Map<String, Object>> categories = (List<Map<String, Object>>) department.get("categories");
+            assertTrue(categories != null && !categories.isEmpty(),
+                    "El departamento '" + departmentName + "' debería tener categorías");
+            for (Map<String, Object> category : categories) {
+                assertTrue(category.get("id") != null && category.get("name") != null,
+                        "Cada categoría de '" + departmentName + "' debería tener id y name: " + category);
+            }
+            Reporter.log("Departamento '" + departmentName + "': " + categories.size() + " categorías", true);
         }
-        Reporter.log("Departamentos recibidos: " + departments.size(), true);
     }
 
     private boolean isCdnBlock(Response response) {
